@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+  <title>Buscador de obras Activas en Córdoba</title>
+<style>
+  textarea,
+  input {
+    -webkit-appearance: none;
+       -moz-appearance: none;
+            appearance: none;
+    background-clip: padding-box;
+  }
+  a, ins, del, button {
+    color: inherit;
+    text-decoration: none;
+  }
+  ul, ol,
+  menu {
+    list-style: none;
+  }
+  .nav {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    white-space: nowrap;
+    margin: 0 1rem;
+    padding: 2rem 0.5rem 1rem;
+    border-bottom: 1px solid #c5d0d1;
+  }
+  .nav__controls {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .nav__label {
+    position: relative;
+    margin-left: 1rem;
+    text-transform: capitalize;
+    z-index: 1;
+    cursor: pointer;
+    text-align: center;
+  }
+  .nav__label span {
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 38px;
+    font-family: Raleway;
+    font-size: 14px;
+  }
+  .nav__label {
+    font-family: Raleway;
+    font-size: 14px !important;
+  }
+  .nav__label--siguiente {
+    margin-left: 1rem;
+  }
+  .nav__label::after {
+    content: '\00d7';
+    display: inline-block;
+    color: transparent;
+    width: 0.5rem;
+    font-weight: 400;
+    -webkit-transform: scale(0);
+            transform: scale(0);
+    -webkit-transition: -webkit-transform 150ms ease-in-out;
+    transition: -webkit-transform 150ms ease-in-out;
+    transition: transform 150ms ease-in-out;
+    transition: transform 150ms ease-in-out, -webkit-transform 150ms ease-in-out;
+  }
+
+  /*cards*/
+  .cards {
+    display: flex;
+    flex-flow: column wrap;
+    width: 100%;
+    overflow-y: auto;
+  }
+  .card {
+    background: #fefff9;
+    color: #363636;
+    margin: 1%;
+    text-decoration: none;
+    box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
+    border-radius: 4px;
+    width: 23%;
+    flex: 1 0 auto;
+    -webkit-backface-visibility: hidden;
+             backface-visibility: hidden;
+     -webkit-transform-origin: 10% 50%;
+             transform-origin: 10% 50%;
+     z-index: 1;
+  }
+  .card a {
+    display: block;
+  }
+  .card .card-summary {
+    padding: 0 4%;
+    color: unset;
+  }
+  .card .card-summary strong {
+      vertical-align: top;
+      display: inline-block;
+      text-align: right;
+      width: 44%;
+  }
+  .card .card-summary span {
+      vertical-align: top;
+      display: inline-block;
+      width: 54%;
+  }
+  .card .card-summary .barrios {
+    margin: 2% 0;
+    line-height: 1.3em;
+  }
+  .card .card-summary .barrios span {
+    font-size: 14px;
+  }
+  .card .card-summary .barrios span:after {
+    content: ", ";
+  }
+  .card .card-summary .barrios span:last-child:after {
+    content: ".";
+  }
+  .card .card-summary .barrios strong,
+  .card .card-summary .barrios span {
+      width: unset;
+      text-align: left;
+  }
+  .card .vc_progress_bar .vc_single_bar {
+    background: #54635d;
+    border-radius: 0;
+  }
+  .card .fecha {
+      background-color: #ebebeb;
+      color: #6d6d6d;
+      line-height: 1.33em;
+      font-size: 1em;
+  }
+  .card .fecha span {
+      width: 50%;
+      display: inline-block;
+      text-align: center;
+      padding: 3% 0;
+      position: relative;
+  }
+  .card .fecha span:nth-child(2) {
+    background-color: rgba(0, 166, 101, 0.85);
+    color: #FFFFFF;
+  }
+  .card .fecha span:nth-child(2):before {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    top: 0;
+    border-color: transparent transparent transparent #ebebeb;
+    border-width: 26px 0 26px 7px;
+  }
+  .card .icono {
+      position: absolute;
+      right: 3px;
+      width: 15%;
+      top: 4px;
+  }
+  .card .card-header {
+    position: relative;
+    height: 175px;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-color: rgba(255, 255, 255, 0.15);
+    background-blend-mode: overlay;
+    -moz-border-radius: 4px 4px 0 0;
+    -webkit-border-radius: 4px;
+    border-radius: 4px 4px 0 0;
+  }
+  .card .card-header:hover, .card .card-header:focus {
+    background-color: rgba(255, 255, 255, 0);
+  }
+  .card .card-title {
+    background: rgba(0, 166, 101, 0.85);
+    padding: 3.5% 0 2.5% 0;
+  }
+  .card .card-title h3 {
+    font-size: 1.2em;
+    color: white;
+    line-height: 1.2;
+    padding: 0 3.5%;
+    margin: 0;
+    letter-spacing: 1px;
+  }
+  .card:hover, .card:focus {
+    background: white;
+    -moz-box-shadow: rgba(0, 0, 0, 0.45) 0px 0px 20px 0px;
+    -webkit-box-shadow: rgba(0, 0, 0, 0.45) 0px 0px 20px 0px;
+    box-shadow: rgba(0, 0, 0, 0.45) 0px 0px 20px 0px;
+  }
+  .card:hover .card-title, .card:focus .card-title {
+    background: rgba(0, 217, 132, 0.85);
+  }
+  img {
+    max-width: 100%;
+  }
+  .card abbr {
+      text-transform: none;
+      border-bottom: none;
+      letter-spacing: unset;
+  }
+  .card .vc_progress_bar.wpb_content_element {
+      margin-bottom: 0;
+  }
+  .sin-resultados {
+    height: 200px;
+  }
+  .sin-resultados,
+  .paginacion-obras {
+    padding: 10px;
+    text-align: center;
+  }
+  .obra-move {
+    -webkit-transition: all 600ms ease-in-out 50ms;
+    transition: all 600ms ease-in-out 50ms;
+  }
+  .obra-enter-active {
+    -webkit-transition: all 300ms ease-out;
+    transition: all 300ms ease-out;
+  }
+  .obra-leave-active {
+    -webkit-transition: all 200ms ease-in;
+    transition: all 200ms ease-in;
+    z-index: 0;
+  }
+  .obra-enter, .obra-leave-to {
+    opacity: 0;
+  }
+  .obra-enter {
+    -webkit-transform: scale(0.9);
+            transform: scale(0.9);
+  }
+
+@media all and (max-width: 940px) {
+  .card {
+    width: 31%;
+  }
+}
+@media all and (max-width: 770px) {
+  .card {
+    width: 48%;
+  }
+  .nav__controls {
+    flex-direction: column;
+    min-height: 50px;
+    margin: 0;
+  }
+  .nav__label,.nav__label--siguiente {
+    margin: 0;
+  }
+  .nav__label--anterior, .nav__label--siguiente {
+    width: 50%;
+  }
+}
+@media all and (max-width: 480px) {
+  .card {
+    width: 97%;
+  }
+  .cards {
+    max-height: unset !important;
+  }
+}
+</style>
+
+</head>
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.2/vue.js"></script>
+<div id="obras">
+  <muni-cards ref="cards"></muni-cards>
+</div>
+
+<script>
+  Vue.component('muni-icono', {
+      template: `<img :alt="alt" :src="'https://www.cordoba.gob.ar/wp-content/uploads/2017/11/'+id+'.png'" class="icono" />`,
+      props: ['id', 'alt']
+  });
+
+  Vue.component('progress-bar', {
+      template: `<div class="vc_progress_bar wpb_content_element  vc_progress-bar-color-orange"><div :class="'vc_general vc_single_bar vc_progress-bar-color-bar_'+color"><small class="vc_label"> <span class="vc_label_units">{{valor}}%</span></small><span class="vc_bar animated striped" :data-percentage-value="valor" :data-value="valor" :style="'width: '+valor+'%;'"></span></div></div>`,
+      props: ['valor', 'color']
+  });
+
+  Vue.component('muni-nav-cards', {
+    template: `<nav class="nav"><menu class="nav__controls">
+      <li class="nav__label">
+        <span class="nav__label--anterior" @click="$emit('volverPagina')"><span>&#12296;</span> <span>anterior</span></span>
+        <span class="nav__label--siguiente" @click="$emit('pasarPagina')"><span>siguiente</span> <span>&#12297;</span></span>
+      </li>
+      <li class="nav__label">
+        <select v-model="tipo" name="tipoObra">
+          <option :value="null">Tipo de obra</option>
+          <option v-for="tipo in tipos" key="tipo.id" :value="tipo.id">{{tipo.nombre}}</option>
+        </select>
+      </li>
+      <li class="nav__label">
+        <select v-model="progreso" name="progreso">
+          <option :value="null">Progreso</option>
+          <option value="licitadas">Licitadas</option>
+          <option value="en_progreso">En progreso</option>
+          <option value="finalizadas">Finalizadas</option>
+        </select>
+      </li>
+      <li class="nav__label">
+        <select v-model="barrio" name="barrio">
+          <option :value="null">Barrio</option>
+          <option v-for="barrio in barrios" key="barrio.id" :value="barrio.id">{{barrio.nombre}}</option>
+        </select>
+      </li>
+      </menu></nav>`,
+      props: ['tipos', 'barrios'],
+      data () {
+        return {
+          tipo: null,
+          progreso: null,
+          barrio: null
+        }
+      },
+      watch: {
+        tipo: function (tipoSeleccionado) {
+          this.$emit('cambioTipo', tipoSeleccionado);
+        },
+        progreso: function (progresoSeleccionado) {
+          this.$emit('cambioProgreso', progresoSeleccionado);
+        },
+        barrio: function (barrioSeleccionado) {
+          this.$emit('cambioBarrio', barrioSeleccionado);
+        }
+      }
+  });
+
+  Vue.component('muni-card', {
+    template: `<a :href='"https://www.cordoba.gob.ar/obras/"+obra.id+"/"+nombreToUrl(obra.nombre)'>
+      <div class="card-header" style="background-image: url(http://placeimg.com/400/200/arch);">
+          <muni-icono :alt="obra.tipo" :id="obra.tipo_id"></muni-icono>
+      </div>
+      <div class="card-title"><h3>{{obra.nombre}}</h3></div>
+      <progress-bar :color="'orange'" :valor="obra.porcentaje_completado.split('.')[0]"></progress-bar>
+      <div class="fecha" v-if="obra.porcentaje_completado != '100.00'" v-html="fecha()"></div>
+      <div class="card-summary">
+          <p class="barrios" v-if="obra.barrios.length > 0"><strong>Barrios:</strong><br><span v-for="barrio in obra.barrios">{{barrio.nombre}}</span></p>
+      </div>
+    </a>`,
+    methods: {
+      fecha() {
+          const inicio = this.formatearFecha(this.obra.fecha_inicio);
+          const fin = this.formatearFecha(this.obra.fecha_finalizacion_estimada);
+          return `<span>Inicio<br/>${inicio}</span><span>Fin Estimado<br/>${fin}</span>`;
+      },
+      formatearTitulo() {
+        if (this.obra.decreto == 00) {
+          return "<strong>Decreto:</strong> <span>Sin información</span>";
+        }
+        return "<strong>Decreto:</strong> <span>" + this.obra.decreto + "</span><br/><strong><abbr title='Número de expediente'>N° Exp.</abbr>:</strong> " + this.obra.expediente_origen;
+      },
+      formatearFecha(fecha) {
+          const date = new Date(fecha);
+          return date.toLocaleDateString();
+      },
+      nombreToUrl(nombre) {
+        let resultado = nombre.split('-')[0].split('(')[0].trim().split(' ').join('-');
+        resultado = resultado.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+        resultado = encodeURIComponent(resultado).toLowerCase();
+        return resultado;
+      }
+    },
+    props: ['obra']
+  })
+
+  Vue.component('muni-cards', {
+    template: `<section>
+      <muni-nav-cards @cambioTipo="cambioTipo" @cambioBarrio="cambioBarrio" @cambioProgreso="cambioProgreso" :barrios="$root.barrios" :tipos="$root.tiposObras" @volverPagina="volverPagina" @pasarPagina="pasarPagina"></muni-nav-cards>
+      <div class="resultados" v-if="obras.length > 0">
+        <div class="paginacion-obras" v-if="mostrandoA > 1">Mostrando {{ indiceDesde+1 }} a {{ mostrandoA }} de {{ todasObras.length }} obras</div>
+        <transition-group class="cards" :style="{maxHeight:altoMaximo}" name="obra" tag="div">
+          <muni-card ref="cardgroup" :obra="obra" class="card" v-for="obra in obras" :key="(Math.random()*obras.length)"></muni-card>
+        </transition-group>
+      </div>
+      <div class="sin-resultados" v-else-if="sinResultados">
+        <span>No se encontraron resultados.</span>
+      </div>
+      <div class="sin-resultados" v-else><span>Cargando...</span></div>
+    </section>`,
+    mounted: function() {
+      this.fetchObras();
+    },
+    data: function() {
+      return {
+        obras: [],
+        todasObras: [],
+        paginaActual: 1,
+        indiceDesde: 1,
+        indiceHasta: 12,
+        ultimaPagina: 1,
+        altoMaximo: '280vh',
+        sinResultados: false,
+        tipoSeleccionado: null,
+        progresoSeleccionado: null,
+        barrioSeleccionado: null
+      }
+    },
+    computed: {
+      mostrandoA () {
+        return this.indiceHasta >= this.todasObras.length ? this.indiceDesde + this.obras.length : this.indiceHasta;
+      }
+    },
+    watch: {
+      obras: function() {
+        let division = 3.7;
+        if (screen.availWidth <= 940) {
+          division = 3.0;
+        } else if (screen.availWidth <= 770) {
+          division = 2.5;
+        }
+        const alto = ((this.mostrandoA - this.indiceDesde) * 460 / division);
+        this.altoMaximo = alto > 460 ? alto+'px' : '460px';
+      }
+    },
+    methods: {
+      fetchObras: function(opciones = {progresoSeleccionado:null, tipoSeleccionado:null, barrioSeleccionado:null}) {
+        const filtroTipo = opciones.tipoSeleccionado ? '&tipo_id='+opciones.tipoSeleccionado : '';
+        const filtroBarrio = opciones.barrioSeleccionado ? '&barrios_ids='+opciones.barrioSeleccionado : '';
+        opcionesProgreso = {
+          licitadas: '&avance_hasta=0',
+          en_progreso: '&avance_desde=1&avance_hasta=99',
+          finalizadas: '&avance_desde=100'
+        };
+        const filtroProgreso = opciones.progresoSeleccionado ? opcionesProgreso[opciones.progresoSeleccionado] : '';
+
+        this.todasObras = [];
+        this.obras = [];
+        this.indiceDesde = 0;
+        this.indiceHasta = 0;
+        this.paginaActual = 1;
+        this.sinResultados = false;
+        const vm = this;
+        const url = 'https://gobiernoabierto.cordoba.gob.ar/api/v2/obras-publicas/obras-publicas/?page_size=400'+filtroProgreso+filtroTipo+filtroBarrio;
+        fetch(url)
+        .then(data => data.json())
+        .then(function(jsonData) {
+          obras = jsonData.results.features.map(dato => Object.assign({id: dato.id}, dato.properties));
+          vm.todasObras = obras;
+          vm.sinResultados = obras.length > 0 ? false : true;
+          vm.ultimaPagina = Math.ceil(obras.length/12.0);
+          vm.indiceDesde = 0;
+          vm.indiceHasta = 12;
+          vm.obras = obras.slice(0, 12);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      },
+      cambioTipo: function(tipoSeleccionado) {
+        this.tipoSeleccionado = tipoSeleccionado;
+        this.fetchObras({tipoSeleccionado, progresoSeleccionado: this.progresoSeleccionado, barrioSeleccionado:this.barrioSeleccionado});
+      },
+      cambioProgreso: function(progresoSeleccionado) {
+        this.progresoSeleccionado = progresoSeleccionado;
+        this.fetchObras({progresoSeleccionado, tipoSeleccionado:this.tipoSeleccionado, barrioSeleccionado:this.barrioSeleccionado});
+      },
+      cambioBarrio: function(barrioSeleccionado) {
+        this.barrioSeleccionado = barrioSeleccionado;
+        this.fetchObras({barrioSeleccionado, tipoSeleccionado:this.tipoSeleccionado, progresoSeleccionado:this.progresoSeleccionado});
+      },
+      pasarPagina: function() {
+        if (this.paginaActual < this.ultimaPagina) {
+          this.indiceDesde = 0+(this.paginaActual*12);
+          this.indiceHasta = this.indiceDesde+12;
+          this.paginaActual++;
+          this.obras = this.todasObras.slice(this.indiceDesde, this.indiceHasta);
+        }
+      },
+      volverPagina: function() {
+        if (this.paginaActual - 1 >= 1) {
+          this.paginaActual--;
+          this.indiceDesde = (this.paginaActual*12)-12;
+          this.indiceHasta = this.indiceDesde+12;
+          this.obras = this.todasObras.slice(this.indiceDesde, this.indiceHasta);
+        }
+      }
+    }
+  })
+
+  const app = new Vue({
+    el: '#obras',
+    data: {
+      tiposObras: [],
+      barrios: []
+    },
+    created () {
+      const vm = this;
+      fetch('https://gobiernoabierto.cordoba.gob.ar/api/v2/obras-publicas/tipos-obras-publicas/')
+        .then(data => data.json())
+        .then(function(dataJson) {
+          vm.tiposObras = dataJson.results;
+        });
+      fetch('https://gobiernoabierto.cordoba.gob.ar/api/v2/obras-publicas/barrios-obras-publicas/?page_size=180')
+        .then(data => data.json())
+        .then(function(dataJson) {
+          vm.barrios = dataJson.results;
+        });
+    }
+  });
+  </script>
+</body>
+</html>
